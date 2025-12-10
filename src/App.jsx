@@ -28,12 +28,10 @@ const App = () => {
 
   const scrollRef = useRef(null)
 
-  useEffect(() => {
-    setTrashRevealed(false)
-  }, [lang])
-
   const t = {
     ru: {
+      page_title: 'NOT.PDF — Веб-резюме и вакансии будущего | Сайт-портфолио за 24 часа',
+      meta_desc: 'Веб-резюме и веб-вакансии будущего с воронкой и конверсией. Соберём твой сайт-портфолио за 24 часа: продающее резюме или вакансию.',
       nav_pain: 'Боль',
       nav_cases: 'Примеры',
       nav_price: 'Прайс',
@@ -111,6 +109,8 @@ const App = () => {
       msg_success_sub: 'Проверь мессенджер, мы уже пишем.',
     },
     ro: {
+      page_title: 'NOT.PDF — CV și job-uri web ale viitorului | Portofoliu în 24h',
+      meta_desc: 'CV și job-uri web cu funnel și conversie. Îți livrăm site-ul portofoliu în 24 de ore: CV care vinde sau job care atrage.',
       nav_pain: 'Durere',
       nav_cases: 'Exemple',
       nav_price: 'Preț',
@@ -188,6 +188,8 @@ const App = () => {
       msg_success_sub: 'Verifică messenger-ul, deja scriem.',
     },
     en: {
+      page_title: 'NOT.PDF — Future-ready web resumes & vacancies | Portfolio in 24h',
+      meta_desc: 'Web resumes and vacancies with funnel and conversion. Your portfolio site in 24 hours: a resume that sells or a vacancy that converts.',
       nav_pain: 'Pain',
       nav_cases: 'Cases',
       nav_price: 'Price',
@@ -267,6 +269,19 @@ const App = () => {
   }
 
   const text = t[lang]
+
+  useEffect(() => {
+    setTrashRevealed(false)
+    document.title = t[lang].page_title
+    document.documentElement.setAttribute('lang', lang)
+    const meta = document.querySelector('meta[name="description"]') || (() => {
+      const m = document.createElement('meta')
+      m.name = 'description'
+      document.head.appendChild(m)
+      return m
+    })()
+    meta.setAttribute('content', t[lang].meta_desc)
+  }, [lang])
 
   const openModal = (type) => {
     setModalType(type)
