@@ -25,6 +25,12 @@ const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalType, setModalType] = useState(null)
   const [formStatus, setFormStatus] = useState('idle')
+  const [formData, setFormData] = useState({
+    name: '',
+    contact: '',
+    email: '',
+    company: '',
+  })
 
   const scrollRef = useRef(null)
 
@@ -32,6 +38,8 @@ const App = () => {
     ru: {
       page_title: 'NOT.PDF — Веб-резюме и вакансии будущего | Сайт-портфолио за 24 часа',
       meta_desc: 'Веб-резюме и веб-вакансии будущего с воронкой и конверсией. Соберём твой сайт-портфолио за 24 часа: продающее резюме или вакансию.',
+      msg_error: 'Ошибка отправки',
+      msg_error_sub: 'Попробуй ещё раз или напиши в Telegram.',
       nav_pain: 'Боль',
       nav_cases: 'Примеры',
       nav_price: 'Прайс',
@@ -111,6 +119,8 @@ const App = () => {
     ro: {
       page_title: 'NOT.PDF — CV și job-uri web ale viitorului | Portofoliu în 24h',
       meta_desc: 'CV și job-uri web cu funnel și conversie. Îți livrăm site-ul portofoliu în 24 de ore: CV care vinde sau job care atrage.',
+      msg_error: 'Eroare la trimitere',
+      msg_error_sub: 'Încearcă din nou sau scrie pe Telegram.',
       nav_pain: 'Durere',
       nav_cases: 'Exemple',
       nav_price: 'Preț',
@@ -190,6 +200,8 @@ const App = () => {
     en: {
       page_title: 'NOT.PDF — Future-ready web resumes & vacancies | Portfolio in 24h',
       meta_desc: 'Web resumes and vacancies with funnel and conversion. Your portfolio site in 24 hours: a resume that sells or a vacancy that converts.',
+      msg_error: 'Send error',
+      msg_error_sub: 'Try again or ping us on Telegram.',
       nav_pain: 'Pain',
       nav_cases: 'Cases',
       nav_price: 'Price',
@@ -291,14 +303,45 @@ const App = () => {
 
   const closeModal = () => {
     setIsModalOpen(false)
+    setFormData({ name: '', contact: '', email: '', company: '' })
+    setFormStatus('idle')
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!modalType) return
+
+    const endpoint = import.meta.env.VITE_MAIL_ENDPOINT || '/api/send-mail'
+
     setFormStatus('sending')
-    setTimeout(() => {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          lead_type: modalType === 'vacancy' ? 'Web Vacancy' : 'Web Resume',
+          subject:
+            modalType === 'vacancy'
+              ? `NOT.PDF | Web Vacancy | ${formData.company || formData.name}`
+              : `NOT.PDF | Web Resume | ${formData.name}`,
+          name: formData.name,
+          contact: formData.contact,
+          email: formData.email,
+          company: modalType === 'vacancy' ? formData.company : 'N/A',
+          lang,
+          submitted_at: new Date().toISOString(),
+        }),
+      })
+
+      if (!res.ok) throw new Error('Mail send failed')
+
       setFormStatus('success')
-    }, 1500)
+    } catch (error) {
+      console.error('Email send error:', error)
+      setFormStatus('error')
+    }
   }
 
   const getPortfolioItems = (currentLang) => {
@@ -447,6 +490,8 @@ const App = () => {
                           type="text"
                           className="w-full bg-black border-2 border-neutral-800 rounded-xl py-4 pl-12 pr-4 text-lg font-bold outline-none focus:border-purple-500 transition-all placeholder:text-neutral-700"
                           placeholder="Future Corp."
+                          value={formData.company}
+                          onChange={(e) => setFormData((p) => ({ ...p, company: e.target.value }))}
                         />
                       </div>
                     </div>
@@ -468,6 +513,8 @@ const App = () => {
                           modalType === 'resume' ? 'focus:border-lime-400' : 'focus:border-purple-500'
                         }`}
                         placeholder="Alex"
+                          value={formData.name}
+                          onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
                       />
                     </div>
                   </div>
@@ -488,6 +535,8 @@ const App = () => {
                           modalType === 'resume' ? 'focus:border-lime-400' : 'focus:border-purple-500'
                         }`}
                         placeholder="@telegram / +373..."
+                          value={formData.contact}
+                          onChange={(e) => setFormData((p) => ({ ...p, contact: e.target.value }))}
                       />
                     </div>
                   </div>
@@ -508,6 +557,8 @@ const App = () => {
                           modalType === 'resume' ? 'focus:border-lime-400' : 'focus:border-purple-500'
                         }`}
                         placeholder="hello@world.com"
+                          value={formData.email}
+                          onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
                       />
                     </div>
                   </div>
@@ -522,6 +573,13 @@ const App = () => {
                   {formStatus === 'sending' ? 'Sending...' : text.btn_send}
                   {!formStatus && <Send size={20} />}
                 </button>
+
+                {formStatus === 'error' && (
+                  <div className="text-center text-red-400 text-sm font-semibold">
+                    {text.msg_error}
+                    <div className="text-neutral-500 text-xs mt-1">{text.msg_error_sub}</div>
+                  </div>
+                )}
               </form>
             )}
           </div>
