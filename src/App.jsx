@@ -351,18 +351,21 @@ const App = () => {
         { title: 'Маркетинг Ниндзя', desc: 'Крипто-стартап ищет убийцу трафика.', stats: '+150 Откликов' },
         { title: 'Продакт Оунер', desc: 'Минимализм и метрики. Только хардкор.', stats: 'Найм за 3 дня' },
         { title: 'Бариста Рок-звезда', desc: 'Вайб важнее скиллов. Кофе научим.', stats: 'Вакансия закрыта' },
+        { title: 'Флорист в Flower Box', desc: 'Веб-вакансия для сервиса цветочных боксов, ищем флориста с чувством стиля.', stats: '48 откликов за 24 часа' },
       ],
       ro: [
         { title: 'Senior Frontend', desc: 'Zeul JavaScript. Știe React mai bine ca creatorii.', stats: 'Conversie: 40%' },
         { title: 'Marketing Ninja', desc: 'Crypto startup caută ucigaș de trafic.', stats: '+150 Aplicări' },
         { title: 'Product Owner', desc: 'Minimalism și metrici. Doar hardcore.', stats: 'Angajat în 3 zile' },
         { title: 'Barista Rockstar', desc: 'Vibe-ul contează. Te învățăm cafea.', stats: 'Poziție închisă' },
+        { title: 'Florist la Flower Box', desc: 'Vacanță web pentru servicii de boxuri cu flori, căutăm florist cu simț estetic.', stats: '48 aplicări în 24h' },
       ],
       en: [
         { title: 'Senior Frontend', desc: 'JavaScript God. Knows React better than creators.', stats: 'Conversion: 40%' },
         { title: 'Marketing Ninja', desc: 'Crypto startup seeking traffic killer.', stats: '+150 Leads' },
         { title: 'Product Owner', desc: 'Minimalism & Metrics. Hardcore only.', stats: 'Hired in 3 days' },
         { title: 'Barista Rockstar', desc: 'Vibe over skills. We teach coffee.', stats: 'Position Closed' },
+        { title: 'Florist at Flower Box', desc: 'Web vacancy for a flower box service; looking for a stylistic florist.', stats: '48 applications in 24h' },
       ],
     }
 
@@ -408,6 +411,16 @@ const App = () => {
         color: 'bg-orange-500',
         textColor: 'text-black',
         stats: c[3].stats,
+      },
+      {
+        id: 5,
+        type: 'vacancy',
+        category: t[currentLang].cat_vacancy,
+        title: c[4].title,
+        desc: c[4].desc,
+        color: 'bg-pink-500',
+        textColor: 'text-white',
+        stats: c[4].stats,
       },
     ]
   }
