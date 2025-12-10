@@ -324,8 +324,8 @@ const App = () => {
           lead_type: modalType === 'vacancy' ? 'Web Vacancy' : 'Web Resume',
           subject:
             modalType === 'vacancy'
-              ? `NOT.PDF | Web Vacancy | ${formData.company || formData.name}`
-              : `NOT.PDF | Web Resume | ${formData.name}`,
+              ? `NOT.PDF | Веб-вакансия | ${formData.company || formData.name}`
+              : `NOT.PDF | Веб-резюме | ${formData.name}`,
           name: formData.name,
           contact: formData.contact,
           email: formData.email,
