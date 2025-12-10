@@ -26,9 +26,10 @@ export default async function handler(req, res) {
   })
 
   const isVacancy = lead_type === 'Web Vacancy'
+  const title = `NOT.PDF | ${isVacancy ? 'Веб-вакансия' : 'Веб-резюме'} | ${escapeHtml(isVacancy ? company || name : name)}`
   const html = `
     <div style="font-family: Inter, Arial, sans-serif; background:#0b0b0b; color:#f8fafc; padding:24px;">
-      <h2 style="margin:0 0 12px; font-size:20px;">${escapeHtml(subject)}</h2>
+      <h2 style="margin:0 0 12px; font-size:20px;">${title}</h2>
       <p style="margin:0 0 4px; color:#a3e635;">${isVacancy ? 'Веб-вакансия' : 'Веб-резюме'}</p>
       <div style="margin-top:12px; padding:16px; border:1px solid #1f2937; border-radius:12px; background:#0f172a;">
         <p><strong>Имя:</strong> ${escapeHtml(name)}</p>
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: `"NOT.PDF" <${SMTP_USER}>`,
       to: MAIL_TO,
-      subject,
+      subject: title,
       html,
     })
     return res.status(200).json({ ok: true })
